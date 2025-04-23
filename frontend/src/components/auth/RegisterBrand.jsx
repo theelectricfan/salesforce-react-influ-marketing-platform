@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Select from "react-select";
+import { SetAlertMethod } from "../../actions/alert";
+import { RegisterBrandMethod } from "../../actions/auth";
+import { useDispatch } from "react-redux";
 
 const industryOptions = [
     { value: "Automotive", label: "Automotive" },
@@ -22,13 +25,14 @@ const industryOptions = [
   ];
 
 export const RegisterBrand = () => {
+    const dispatch = useDispatch();
     const [formData, setFormData] = useState({
         name: "",
         email: "",
         phone: "",
         password: "",
         password2: "",
-        industry: [],
+        industry: "",
     });
 
 
@@ -41,18 +45,23 @@ export const RegisterBrand = () => {
         const selectedValues = selectedOptions.map(
             (option) => option.value
         );
+        const industryString = selectedValues.join(";");
         setFormData({
             ...formData,
-            industry : selectedValues,
+            industry : industryString,
         });
     }
-
+    
     const onSubmit = e => {
         e.preventDefault();
         if (password !== password2) {
-            console.log("Passwords do not match");
+            
+            SetAlertMethod("Passwords do not match", "danger", dispatch);
+
         } else {
             console.log("Form submitted", formData);
+            RegisterBrandMethod(formData, dispatch);
+            console.log("brand registered", formData);
         }
     }
       

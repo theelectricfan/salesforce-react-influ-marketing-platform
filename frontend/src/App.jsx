@@ -1,4 +1,9 @@
-import { createBrowserRouter, RouterProvider, Outlet, useLocation } from "react-router-dom";
+import {
+    createBrowserRouter,
+    RouterProvider,
+    Outlet,
+    useLocation,
+} from "react-router-dom";
 
 import "./App.css";
 import { Navbar } from "./components/layout/Navbar";
@@ -7,8 +12,12 @@ import { LandingInfluencer } from "./components/layout/LandingInfluencer";
 import { RegisterBrand } from "./components/auth/RegisterBrand";
 import { LoginBrand } from "./components/auth/LoginBrand";
 import { LoginInfluencer } from "./components/auth/LoginInfluencer";
-import {RegisterInfluencer} from "./components/auth/RegisterInfluencer";
+import { RegisterInfluencer } from "./components/auth/RegisterInfluencer";
 
+//redux
+import { Provider } from "react-redux";
+import { store } from "./store/store";
+import { Alert } from "./components/layout/Alert";
 
 const Layout = () => {
     const location = useLocation();
@@ -22,6 +31,7 @@ const Layout = () => {
             <Navbar />
             {shouldWrap ? (
                 <section className="container">
+                    <Alert />
                     <Outlet />
                 </section>
             ) : (
@@ -30,7 +40,6 @@ const Layout = () => {
         </>
     );
 };
-
 
 const router = createBrowserRouter([
     {
@@ -52,7 +61,9 @@ const router = createBrowserRouter([
 function App() {
     return (
         <>
-            <RouterProvider router={router} />
+            <Provider store={store}>
+                <RouterProvider router={router} />
+            </Provider>
         </>
     );
 }
