@@ -6,12 +6,37 @@ require("dotenv").config();
 
 const { check, validationResult } = require("express-validator");
 
-const { findOneBrandByPhoneOrEmail } = require("../../salesforce/brand/findOneBrand.js");
+const { findOneBrandByPhoneOrEmail, findOneBrandById } = require("../../salesforce/brand/findOneBrand.js");
 const { createBrand} = require("../../salesforce/brand/createBrand.js"); 
+const authBrandMiddleware = require("../../middleware/authBrand.js");
 
 const { authCache } = require("../../authcache.js");
 
 const router = express.Router();
+
+
+
+// @route GET api/authbrand
+// @desc  Test route
+// @access Public
+router.get("/", authBrandMiddleware, async (req, res) => {
+    try{
+        const response = await findOneBrandById();
+        console.log("response", response);
+        const brand ={
+            id : response.Id,
+            name : response.Name,
+            email : response.Email__c,
+            phone : response.Phone__c,
+            industry : response.Industry__c,
+        }
+        res.json(brand);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server error");
+    }
+});
+
 
 // @route  POST api/authbrand/signup
 // @desc   Register a new brand

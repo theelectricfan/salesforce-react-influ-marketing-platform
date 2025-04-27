@@ -12,15 +12,22 @@ export const authSlice = createSlice(
         name: 'authStatus',
         initialState,
         reducers: {
+            userLoaded: (state, action) => {
+                return {
+                    ...state,
+                    isAuthenticated: true,
+                    loading: false,
+                    user: action.payload,
+                }
+            },
             registerSuccess: (state, action) => {
                 localStorage.setItem('token', action.payload.token);
 
                 return {
                     ...state,
+                    ...action.payload,
                     isAuthenticated: true,
                     loading: false,
-                    token: action.payload.token,
-                    user: action.payload.user,
                 }
             },
             registerFail: (state) => {
@@ -30,14 +37,22 @@ export const authSlice = createSlice(
                     isAuthenticated: false,
                     loading: false,
                     token: null,
-                    user: null,
+                }
+            },
+            authError: (state) => {
+                localStorage.removeItem('token');
+                return {
+                    ...state,
+                    isAuthenticated: false,
+                    loading: false,
+                    token: null,
                 }
             },
         },
     }
 )
 
-export const {registerSuccess, registerFail} = authSlice.actions;
+export const {registerSuccess, registerFail, userLoaded, authError} = authSlice.actions;
 
 export const authReducer = authSlice.reducer;
 

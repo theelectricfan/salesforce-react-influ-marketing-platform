@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 
 import "./App.css";
+import { useEffect } from "react";
 import { Navbar } from "./components/layout/Navbar";
 import { LandingBrand } from "./components/layout/LandingBrand";
 import { LandingInfluencer } from "./components/layout/LandingInfluencer";
@@ -14,10 +15,14 @@ import { LoginBrand } from "./components/auth/LoginBrand";
 import { LoginInfluencer } from "./components/auth/LoginInfluencer";
 import { RegisterInfluencer } from "./components/auth/RegisterInfluencer";
 
-//redux
-import { Provider } from "react-redux";
-import { store } from "./store/store";
 import { Alert } from "./components/layout/Alert";
+import { setAuthToken } from "./utils/setAuthToken";
+import { loadBrandMethod } from "./actions/auth";
+import { useDispatch } from "react-redux";
+
+if (localStorage.token) {
+    setAuthToken(localStorage.token);
+}
 
 const Layout = () => {
     const location = useLocation();
@@ -59,11 +64,14 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+    const dispatch = useDispatch();
+    useEffect(() => {
+        loadBrandMethod(dispatch);
+    }, []);
+
     return (
         <>
-            <Provider store={store}>
-                <RouterProvider router={router} />
-            </Provider>
+            <RouterProvider router={router} />
         </>
     );
 }

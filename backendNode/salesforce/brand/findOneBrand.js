@@ -29,8 +29,7 @@ async function findOneBrandByPhoneOrEmail(
         console.log("Response data:", response);
         return response.data?.records[0];
     } catch (error) {
-        console.log("Error response:", error);
-        if (retry) {
+        if (error.response?.status === 401 && error.response?.data?.[0]?.errorCode === "INVALID_SESSION_ID" && retry) {
             console.warn("⚠️ Token possibly expired. Refreshing...");
             await getAccessToken();
             // Avoid infinite loop by setting retry = false

@@ -1,11 +1,32 @@
-import {axiosInstance} from '../axiosInstance';
-import { registerSuccess, registerFail } from '../features/auth';
+import {axiosInstance} from '../utils/axiosInstance';
+import { registerSuccess, registerFail, userLoaded, authError } from '../features/auth';
 import { SetAlertMethod } from './alert';
+import { setAuthToken } from '../utils/setAuthToken';
+
+
+export const loadBrandMethod = async(dispatch)=>{
+    if (localStorage.token) {
+        setAuthToken(localStorage.token);
+    }
+    try{
+        const response = await axiosInstance.get('/api/authbrand/');
+        console.log(response.data);
+        dispatch(userLoaded(response.data));
+    } catch (error) {
+        const errors = error.response.data.errors;
+        if (errors) {
+            errors.forEach((error) => {
+                SetAlertMethod(error.msg, 'danger', dispatch);
+            });
+        }
+        dispatch(authError());
+    }
+}
 
 
 const RegisterBrandHelper = async (config, body, dispatch) => {
     try {
-        const response = await axiosInstance.post('http://localhost:5000/api/authbrand/signup', body, config);
+        const response = await axiosInstance.post('/api/authbrand/signup', body, config);
 
         dispatch(registerSuccess(response.data));
 
@@ -39,4 +60,5 @@ export const RegisterBrandMethod = ({name, industry, phone, email, password}, di
 
     RegisterBrandHelper(config, body, dispatch);
 }
+
 

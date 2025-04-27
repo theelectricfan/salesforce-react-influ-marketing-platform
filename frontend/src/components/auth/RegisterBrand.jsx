@@ -63,9 +63,8 @@ export const RegisterBrand = () => {
             RegisterBrandMethod(formData, dispatch);
             console.log("brand registered", formData);
         }
-    }
-      
-
+    }      
+    
     return (
         <>
             <h1 className="large text-primary">Sign Up</h1>

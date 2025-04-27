@@ -23,7 +23,6 @@ async function getAccessToken() {
                 },
             }
         );
-        console.log("Access token response:", response);
         authCache.access_token = response.data.access_token;
         authCache.instance_url = response.data.instance_url;
     }
