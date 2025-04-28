@@ -1,10 +1,12 @@
 import {axiosInstance} from '../utils/axiosInstance';
-import { registerSuccess, registerFail, userLoaded, authError } from '../features/auth';
+import { registerSuccess, registerFail, userLoaded, authError, loginSuccess, loginFail, logout } from '../features/auth';
 import { SetAlertMethod } from './alert';
 import { setAuthToken } from '../utils/setAuthToken';
 
 
 export const loadBrandMethod = async(dispatch)=>{
+
+    console.log("loadBrandMethod called");
     if (localStorage.token) {
         setAuthToken(localStorage.token);
     }
@@ -24,7 +26,22 @@ export const loadBrandMethod = async(dispatch)=>{
 }
 
 
-const RegisterBrandHelper = async (config, body, dispatch) => {
+
+export const RegisterBrandMethod = async ({name, industry, phone, email, password}, dispatch) =>{
+    const brandName = name;
+    const brandIndustry = industry;
+    const brandPhone = phone;
+    const brandEmail = email;
+    const brandPassword = password;
+
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    }
+
+    const body = JSON.stringify({brandName, brandIndustry, brandPhone, brandEmail, brandPassword});
+
     try {
         const response = await axiosInstance.post('/api/authbrand/signup', body, config);
 
@@ -43,10 +60,9 @@ const RegisterBrandHelper = async (config, body, dispatch) => {
     }
 }
 
-export const RegisterBrandMethod = ({name, industry, phone, email, password}, dispatch) =>{
-    const brandName = name;
-    const brandIndustry = industry;
-    const brandPhone = phone;
+
+export const LoginBrandMethod = async ({email, password}, dispatch) =>{
+
     const brandEmail = email;
     const brandPassword = password;
 
@@ -56,9 +72,26 @@ export const RegisterBrandMethod = ({name, industry, phone, email, password}, di
         },
     }
 
-    const body = JSON.stringify({brandName, brandIndustry, brandPhone, brandEmail, brandPassword});
+    const body = JSON.stringify({brandEmail, brandPassword});
 
-    RegisterBrandHelper(config, body, dispatch);
+    try {
+        const response = await axiosInstance.post('/api/authbrand/login', body, config);
+
+        dispatch(loginSuccess(response.data));
+
+    } catch (error) {
+        const errors = error.response.data.errors;
+
+        if (errors) {
+            errors.forEach((error) => {
+                SetAlertMethod(error.msg, 'danger', dispatch);
+            });
+        }
+        dispatch(loginFail());
+
+    }
 }
 
-
+export const LogoutBrandMethod = (dispatch) => {
+    dispatch(logout());
+}

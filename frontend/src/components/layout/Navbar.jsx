@@ -24,7 +24,7 @@ export const Navbar = () => {
                     ) : (
                         <Link to="/influencer">Are you an Influencer?</Link>
                     )}
-                    </li>
+                </li>
             </ul>
         </nav>
     );

@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { LoginBrandMethod } from "../../actions/authBrand";
+import { Navigate } from "react-router-dom";
 import Select from "react-select";
 
 export const LoginBrand = () => {
+    const dispatch = useDispatch();
     const [formData, setFormData] = useState({
         email: "",
         password: "",
@@ -17,8 +21,17 @@ export const LoginBrand = () => {
         e.preventDefault();
 
         console.log("Form submitted", formData);
-    };
 
+        LoginBrandMethod(formData, dispatch);
+
+    };
+    const isAuthenticated = useSelector(
+        (state) => state.authStatus.isAuthenticated
+    );
+   
+    if (isAuthenticated) {
+        return <Navigate to="/brandDashboard" />;
+    }
     return (
         <>
             <h1 className="large text-primary">Sign In</h1>

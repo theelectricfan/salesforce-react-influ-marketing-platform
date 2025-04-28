@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Select from "react-select";
 import { SetAlertMethod } from "../../actions/alert";
-import { RegisterBrandMethod } from "../../actions/auth";
-import { useDispatch } from "react-redux";
+import { RegisterBrandMethod } from "../../actions/authBrand";
+import { useDispatch, useSelector } from "react-redux";
 
 const industryOptions = [
     { value: "Automotive", label: "Automotive" },
@@ -64,7 +64,14 @@ export const RegisterBrand = () => {
             console.log("brand registered", formData);
         }
     }      
-    
+    const isAuthenticated = useSelector(
+        (state) => state.authStatus.isAuthenticated
+    );
+
+    if (isAuthenticated) {
+        return <Navigate to="/brandDashboard" />;
+    }
+
     return (
         <>
             <h1 className="large text-primary">Sign Up</h1>

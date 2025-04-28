@@ -17,8 +17,9 @@ import { RegisterInfluencer } from "./components/auth/RegisterInfluencer";
 
 import { Alert } from "./components/layout/Alert";
 import { setAuthToken } from "./utils/setAuthToken";
-import { loadBrandMethod } from "./actions/auth";
-import { useDispatch } from "react-redux";
+import { loadBrandMethod } from "./actions/authBrand";
+import { useDispatch, useSelector } from "react-redux";
+import { ClimbingBoxLoader } from "react-spinners";
 
 if (localStorage.token) {
     setAuthToken(localStorage.token);
@@ -59,16 +60,34 @@ const router = createBrowserRouter([
             { path: "loginInfluencer", element: <LoginInfluencer /> },
             { path: "registerInfluencer", element: <RegisterInfluencer /> },
             { path: "influencer", element: <LandingInfluencer /> },
+            { path: "brandDashboard", element: <></> },
+            { path: "influencerDashboard", element: <></> },
         ],
     },
 ]);
 
 function App() {
     const dispatch = useDispatch();
+    const isLoading= useSelector(
+        (state) => state.authStatus.loading
+    );
     useEffect(() => {
         loadBrandMethod(dispatch);
     }, []);
-
+    if (isLoading) {
+        return (
+            <>
+                <ClimbingBoxLoader
+                    color="#0030ff"
+                    cssOverride={{
+                        margin: "200px auto",
+                    }}
+                    loading
+                    size={50}
+                />
+            </>
+        );
+    }
     return (
         <>
             <RouterProvider router={router} />

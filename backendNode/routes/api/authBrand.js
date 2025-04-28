@@ -21,9 +21,9 @@ const router = express.Router();
 // @access Public
 router.get("/", authBrandMiddleware, async (req, res) => {
     try{
-        const response = await findOneBrandById();
+        const response = await findOneBrandById(req.brand.id);
         console.log("response", response);
-        const brand ={
+        const brand = {
             id : response.Id,
             name : response.Name,
             email : response.Email__c,
