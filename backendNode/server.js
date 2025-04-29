@@ -18,6 +18,7 @@ app.use(express.json({ extended: false }));
 
 // Define routes
 app.use("/api/authbrand", require("./routes/api/authBrand.js"));
+app.use("/api/authinfluencer", require("./routes/api/authInfluencer.js"));
 // app.use("/api/profile/brand", require("./routes/api/profileBrand.js"));
 // app.use("/api/auth/brand", require("./routes/api/authBrand.js"));
 // app.use("/api/profile/brand", require("./routes/api/profileBrand.js"));

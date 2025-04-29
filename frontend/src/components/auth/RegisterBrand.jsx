@@ -4,6 +4,7 @@ import Select from "react-select";
 import { SetAlertMethod } from "../../actions/alert";
 import { RegisterBrandMethod } from "../../actions/authBrand";
 import { useDispatch, useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 
 const industryOptions = [
     { value: "Automotive", label: "Automotive" },

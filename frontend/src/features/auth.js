@@ -47,6 +47,7 @@ export const authSlice = createSlice(
                     isAuthenticated: false,
                     loading: false,
                     token: null,
+                    user: null,
                 }
             },
             authError: (state) => {
@@ -56,6 +57,7 @@ export const authSlice = createSlice(
                     isAuthenticated: false,
                     loading: false,
                     token: null,
+                    user: null,
                 }
             },
             loginFail: (state) => {
@@ -65,6 +67,7 @@ export const authSlice = createSlice(
                     isAuthenticated: false,
                     loading: false,
                     token: null,
+                    user: null,
                 }
             },
             logout: (state) => {
@@ -74,13 +77,14 @@ export const authSlice = createSlice(
                     isAuthenticated: false,
                     loading: false,
                     token: null,
+                    user: null,
                 }
             }
         },
     }
 )
 
-export const {registerSuccess, registerFail, userLoaded, authError, loginSuccess, loginFail} = authSlice.actions;
+export const {registerSuccess, registerFail, userLoaded, authError, loginSuccess, loginFail, logout} = authSlice.actions;
 
 export const authReducer = authSlice.reducer;
 

@@ -16,10 +16,10 @@ const router = express.Router();
 
 
 
-// @route GET api/authbrand
+// @route GET api/authbrand/branduser
 // @desc  Test route
 // @access Public
-router.get("/", authBrandMiddleware, async (req, res) => {
+router.get("/branduser", authBrandMiddleware, async (req, res) => {
     try{
         const response = await findOneBrandById(req.brand.id);
         console.log("response", response);
@@ -29,6 +29,7 @@ router.get("/", authBrandMiddleware, async (req, res) => {
             email : response.Email__c,
             phone : response.Phone__c,
             industry : response.Industry__c,
+            type: 'Brand',
         }
         res.json(brand);
     } catch (err) {

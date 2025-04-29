@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { LoginBrandMethod } from "../../actions/authBrand";
 import { Navigate } from "react-router-dom";
-import Select from "react-select";
 
 export const LoginBrand = () => {
     const dispatch = useDispatch();

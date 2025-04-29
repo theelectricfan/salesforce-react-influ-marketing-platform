@@ -4,14 +4,14 @@ import { SetAlertMethod } from './alert';
 import { setAuthToken } from '../utils/setAuthToken';
 
 
-export const loadBrandMethod = async(dispatch)=>{
+export const loadInfluencerMethod = async(dispatch)=>{
 
-    console.log("loadBrandMethod called");
+    console.log("loadInfluencerMethod called");
     if (localStorage.token) {
         setAuthToken(localStorage.token);
     }
     try{
-        const response = await axiosInstance.get('/api/authbrand/branduser');
+        const response = await axiosInstance.get('/api/authinfluencer/user');
         console.log(response.data);
         dispatch(userLoaded(response.data));
     } catch (error) {
@@ -27,12 +27,12 @@ export const loadBrandMethod = async(dispatch)=>{
 
 
 
-export const RegisterBrandMethod = async ({name, industry, phone, email, password}, dispatch) =>{
-    const brandName = name;
-    const brandIndustry = industry;
-    const brandPhone = phone;
-    const brandEmail = email;
-    const brandPassword = password;
+export const RegisterInfluencerMethod = async ({name, category, phone, email, password}, dispatch) =>{
+    const influencerName = name;
+    const influencerCategory = category;
+    const influencerPhone = phone;
+    const influencerEmail = email;
+    const influencerPassword = password;
 
     const config = {
         headers: {
@@ -40,13 +40,12 @@ export const RegisterBrandMethod = async ({name, industry, phone, email, passwor
         },
     }
 
-    const body = JSON.stringify({brandName, brandIndustry, brandPhone, brandEmail, brandPassword});
+    const body = JSON.stringify({influencerName, influencerCategory, influencerPhone, influencerEmail, influencerPassword});
 
     try {
-        const response = await axiosInstance.post('/api/authbrand/signup', body, config);
+        const response = await axiosInstance.post('/api/authinfluencer/signup', body, config);
 
         dispatch(registerSuccess(response.data));
-        
 
     } catch (error) {
         const errors = error.response.data.errors;
@@ -62,10 +61,10 @@ export const RegisterBrandMethod = async ({name, industry, phone, email, passwor
 }
 
 
-export const LoginBrandMethod = async ({email, password}, dispatch) =>{
+export const LoginInfluencerMethod = async ({email, password}, dispatch) =>{
 
-    const brandEmail = email;
-    const brandPassword = password;
+    const influencerEmail = email;
+    const influencerPassword = password;
 
     const config = {
         headers: {
@@ -73,10 +72,10 @@ export const LoginBrandMethod = async ({email, password}, dispatch) =>{
         },
     }
 
-    const body = JSON.stringify({brandEmail, brandPassword});
+    const body = JSON.stringify({influencerEmail, influencerPassword});
 
     try {
-        const response = await axiosInstance.post('/api/authbrand/login', body, config);
+        const response = await axiosInstance.post('/api/authinfluencer/login', body, config);
 
         dispatch(loginSuccess(response.data));
 
@@ -93,6 +92,6 @@ export const LoginBrandMethod = async ({email, password}, dispatch) =>{
     }
 }
 
-export const LogoutBrandMethod = (dispatch) => {
+export const LogoutInfluencerMethod = (dispatch) => {
     dispatch(logout());
 }
