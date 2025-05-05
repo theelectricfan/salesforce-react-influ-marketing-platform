@@ -250,6 +250,8 @@ img {
 .form input[type="password"],
 .form input[type="date"],
 .form input[type="tel"],
+.form input[type="number"],
+.form input[type="url"],
 .form select,
 .form textarea {
     display: block;
@@ -257,6 +259,21 @@ img {
     padding: 0.4rem;
     font-size: 1.2rem;
     border: 1px solid #ccc;
+}
+
+.search-bar input{
+    width: 100%;
+    padding: 0.4rem;
+    font-size: 1.2rem;
+    border: 1px solid #ccc;
+}
+
+.search-bar{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem 0;
+    gap: 0.5rem;
 }
 
 .form input[type="submit"],
@@ -576,3 +593,4 @@ button {
         padding: 0.3rem 0.4rem;
     }
 }
+

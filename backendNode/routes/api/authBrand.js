@@ -6,38 +6,38 @@ require("dotenv").config();
 
 const { check, validationResult } = require("express-validator");
 
-const { findOneBrandByPhoneOrEmail, findOneBrandById } = require("../../salesforce/brand/findOneBrand.js");
-const { createBrand} = require("../../salesforce/brand/createBrand.js"); 
+const {
+    findOneBrandByPhoneOrEmail,
+    findOneBrandById,
+} = require("../../salesforce/brand/findOneBrand.js");
+const { createBrand } = require("../../salesforce/brand/createBrand.js");
 const authBrandMiddleware = require("../../middleware/authBrand.js");
 
 const { authCache } = require("../../authcache.js");
 
 const router = express.Router();
 
-
-
 // @route GET api/authbrand/branduser
 // @desc  Test route
 // @access Public
 router.get("/branduser", authBrandMiddleware, async (req, res) => {
-    try{
+    try {
         const response = await findOneBrandById(req.brand.id);
         console.log("response", response);
-        const brand = {
-            id : response.Id,
-            name : response.Name,
-            email : response.Email__c,
-            phone : response.Phone__c,
-            industry : response.Industry__c,
-            type: 'Brand',
-        }
-        res.json(brand);
+        const user = {
+            id: response.Id,
+            name: response.Name,
+            email: response.Email__c,
+            phone: response.Phone__c,
+            industry: response.Industry__c,
+            type: "Brand",
+        };
+        res.json({user});
     } catch (err) {
         console.error(err.message);
         res.status(500).send("Server error");
     }
 });
-
 
 // @route  POST api/authbrand/signup
 // @desc   Register a new brand
@@ -62,14 +62,32 @@ router.post(
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const { brandName, brandIndustry, brandEmail, brandPassword, brandPhone } = req.body;
+        const {
+            brandName,
+            brandIndustry,
+            brandEmail,
+            brandPassword,
+            brandPhone,
+        } = req.body;
 
-        try{
+        try {
             // Check if the brand already exists in the database
-            brand = await findOneBrandByPhoneOrEmail(brandPhone, brandEmail, authCache);
+            brand = await findOneBrandByPhoneOrEmail(
+                brandPhone,
+                brandEmail,
+                authCache
+            );
 
             if (brand) {
-                return res.status(400).json({ errors: [{ msg: "Brand with this phone/email already exists" }] });
+                return res
+                    .status(400)
+                    .json({
+                        errors: [
+                            {
+                                msg: "Brand with this phone/email already exists",
+                            },
+                        ],
+                    });
             }
             // encrypt the password
 
@@ -78,13 +96,19 @@ router.post(
             const hashedPassword = await bcrypt.hash(brandPassword, salt);
 
             // create a new brand object
-            result = await createBrand(brandName, brandIndustry, brandEmail, hashedPassword, brandPhone);
+            result = await createBrand(
+                brandName,
+                brandIndustry,
+                brandEmail,
+                hashedPassword,
+                brandPhone
+            );
 
-            const payload ={
+            const payload = {
                 brand: {
                     id: result.id,
                 },
-            }
+            };
 
             // create a JWT token
             jwt.sign(
@@ -94,11 +118,19 @@ router.post(
                 // { expiresIn: 3600 }, // 1 hour
                 (err, token) => {
                     if (err) throw err;
-                    res.status(201).json({ token });
+                    res.status(201).json({
+                        token,
+                        user: {
+                            id: result.id,
+                            name: brandName,
+                            email: brandEmail,
+                            phone: brandPhone,
+                            industry: brandIndustry,
+                            type: "Brand",
+                        },
+                    });
                 }
-            )  
-            
-
+            );
         } catch (err) {
             console.error(err);
             res.status(500).send(err.message);
@@ -106,16 +138,14 @@ router.post(
     }
 );
 
-
-
 // @route POST api/authbrand/login
 // @desc  Authenticate brand & get token
 // @access Public
 router.post(
-    '/login',
+    "/login",
     [
-        check('brandEmail', 'Please include a valid email').isEmail(),
-        check('brandPassword', 'Password is required').exists(),
+        check("brandEmail", "Please include a valid email").isEmail(),
+        check("brandPassword", "Password is required").exists(),
     ],
     async (req, res) => {
         const errors = validationResult(req);
@@ -130,14 +160,21 @@ router.post(
             let brand = await findOneBrandByPhoneOrEmail(null, brandEmail);
 
             if (!brand) {
-                return res.status(400).json({ errors: [{ msg: "Invalid credentials" }] });
+                return res
+                    .status(400)
+                    .json({ errors: [{ msg: "Invalid credentials" }] });
             }
 
             // Check if the password matches
-            const isMatch = await bcrypt.compare(brandPassword, brand.PasswordHash__c);
+            const isMatch = await bcrypt.compare(
+                brandPassword,
+                brand.PasswordHash__c
+            );
 
             if (!isMatch) {
-                return res.status(400).json({ errors: [{ msg: "Invalid credentials" }] });
+                return res
+                    .status(400)
+                    .json({ errors: [{ msg: "Invalid credentials" }] });
             }
 
             const payload = {
@@ -153,7 +190,17 @@ router.post(
                 { expiresIn: 604800 }, // 1 week
                 (err, token) => {
                     if (err) throw err;
-                    res.json({ token });
+                    res.json({
+                        token,
+                        user: {
+                            id: brand.Id,
+                            name: brand.Name,
+                            email: brand.Email__c,
+                            phone: brand.Phone__c,
+                            industry: brand.Industry__c,
+                            type: "Brand",
+                        },
+                    });
                 }
             );
         } catch (err) {
@@ -161,7 +208,6 @@ router.post(
             res.status(500).send("Server error");
         }
     }
-)
-
+);
 
 module.exports = router;

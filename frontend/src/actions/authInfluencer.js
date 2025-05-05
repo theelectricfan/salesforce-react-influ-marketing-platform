@@ -11,8 +11,9 @@ export const loadInfluencerMethod = async(dispatch)=>{
         setAuthToken(localStorage.token);
     }
     try{
-        const response = await axiosInstance.get('/api/authinfluencer/user');
+        const response = await axiosInstance.get('/api/authinfluencer/influenceruser');
         console.log(response.data);
+        
         dispatch(userLoaded(response.data));
     } catch (error) {
         const errors = error.response.data.errors;
@@ -45,7 +46,12 @@ export const RegisterInfluencerMethod = async ({name, category, phone, email, pa
     try {
         const response = await axiosInstance.post('/api/authinfluencer/signup', body, config);
 
-        dispatch(registerSuccess(response.data));
+        const payload = {
+            ...response.data,
+            tokenType : 'Influencer'
+        }
+
+        dispatch(registerSuccess(payload));
 
     } catch (error) {
         const errors = error.response.data.errors;
@@ -77,7 +83,12 @@ export const LoginInfluencerMethod = async ({email, password}, dispatch) =>{
     try {
         const response = await axiosInstance.post('/api/authinfluencer/login', body, config);
 
-        dispatch(loginSuccess(response.data));
+        const payload = {
+            ...response.data,
+            tokenType : 'Influencer'
+        }
+
+        dispatch(loginSuccess(payload));
 
     } catch (error) {
         const errors = error.response.data.errors;

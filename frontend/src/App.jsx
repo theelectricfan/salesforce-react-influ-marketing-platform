@@ -21,9 +21,12 @@ import { setAuthToken } from "./utils/setAuthToken";
 import { loadBrandMethod } from "./actions/authBrand";
 import { useDispatch, useSelector } from "react-redux";
 import { ClimbingBoxLoader } from "react-spinners";
-import { InfluencerList } from "./components/layout/InfluencerList";
+import { InfluencerList } from "./components/influencers/InfluencerList";
 import { BrandDashboard } from "./components/brandDashboard/BrandDashboard";
-
+import { InfluencerDashboard } from "./components/influencerDashboard/InfluencerDashboard";
+import { loadInfluencerMethod } from "./actions/authInfluencer";
+import { authError } from "./features/auth";
+import { CreateInfluencerSocial } from "./components/influencerDashboard/createInfluencerSocial";
 if (localStorage.token) {
     setAuthToken(localStorage.token);
 }
@@ -106,6 +109,9 @@ const router = createBrowserRouter([
             {
                 element: <AuthWrapper />, // 👈 Wraps protected/redirectable pages
                 children: [
+                    { index: true, element: <LandingBrand /> },
+
+                    { path: "influencer", element: <LandingInfluencer /> },
                     { path: "registerBrand", element: <RegisterBrand /> },
                     { path: "loginBrand", element: <LoginBrand /> },
                     { path: "loginInfluencer", element: <LoginInfluencer /> },
@@ -123,11 +129,19 @@ const router = createBrowserRouter([
             },
             {
                 element: <InfluencerWrapper />, // 👈 Wraps protected/redirectable pages
-                children: [{ path: "influencerDashboard", element: <></> }],
+                children: [
+                    {
+                        path: "influencerDashboard",
+                        element: <InfluencerDashboard />
+                        
+                    },
+                    {
+                        path: "addInfluencerSocial",
+                        element: <CreateInfluencerSocial />
+                    }
+                ],
             },
-            { path: "influencer", element: <LandingInfluencer /> },
             { path: "browseInfluencers", element: <InfluencerList /> },
-            { index: true, element: <LandingBrand /> },
         ],
     },
 ]);
@@ -138,7 +152,15 @@ function App() {
     const isLoading = useSelector((state) => state.authStatus.loading);
 
     useEffect(() => {
-        loadBrandMethod(dispatch);
+        console.log('inside useEffect');
+        console.log('localStorage.tokenType' + localStorage.tokenType);
+        if (localStorage.tokenType === 'Brand') {
+            loadBrandMethod(dispatch);
+        } else if (localStorage.tokenType === 'Influencer') {
+            loadInfluencerMethod(dispatch);
+        } else{
+            dispatch(authError());
+        }
     }, []);
 
     if (isLoading) {

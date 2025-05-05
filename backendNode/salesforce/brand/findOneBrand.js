@@ -22,7 +22,7 @@ async function findOneBrandByPhoneOrEmail(
                     "Content-Type": "application/json",
                 },
                 params: {
-                    q: `SELECT Id, PasswordHash__c, Phone__c, Email__c FROM Brand__c WHERE Phone__c='${brandPhone}' OR Email__c='${brandEmail}' LIMIT 1`,
+                    q: `SELECT Id, Name, PasswordHash__c, Phone__c, Email__c, Industry__c FROM Brand__c WHERE Phone__c='${brandPhone}' OR Email__c='${brandEmail}' LIMIT 1`,
                 },
             }
         );

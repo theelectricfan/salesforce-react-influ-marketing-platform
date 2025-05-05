@@ -22,7 +22,7 @@ async function findOneInfluencerByPhoneOrEmail(
                     "Content-Type": "application/json",
                 },
                 params: {
-                    q: `SELECT Id, PasswordHash__c, Phone__c, Email__c FROM Influencer__c WHERE Phone__c='${influencerPhone}' OR Email__c='${influencerEmail}' LIMIT 1`,
+                    q: `SELECT Id, Name, PasswordHash__c, Phone__c, Email__c, Category__c FROM Influencer__c WHERE Phone__c='${influencerPhone}' OR Email__c='${influencerEmail}' LIMIT 1`,
                 },
             }
         );

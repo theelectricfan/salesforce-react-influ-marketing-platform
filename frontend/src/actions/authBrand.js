@@ -45,7 +45,12 @@ export const RegisterBrandMethod = async ({name, industry, phone, email, passwor
     try {
         const response = await axiosInstance.post('/api/authbrand/signup', body, config);
 
-        dispatch(registerSuccess(response.data));
+        const payload = {
+            ...response.data,
+            tokenType: 'Brand'
+        }
+
+        dispatch(registerSuccess(payload));
         
 
     } catch (error) {
@@ -78,7 +83,12 @@ export const LoginBrandMethod = async ({email, password}, dispatch) =>{
     try {
         const response = await axiosInstance.post('/api/authbrand/login', body, config);
 
-        dispatch(loginSuccess(response.data));
+        const payload = {
+            ...response.data,
+            tokenType: 'Brand'
+        }
+
+        dispatch(loginSuccess(payload));
 
     } catch (error) {
         const errors = error.response.data.errors;

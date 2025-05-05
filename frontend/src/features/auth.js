@@ -15,14 +15,14 @@ export const authSlice = createSlice(
             userLoaded: (state, action) => {
                 return {
                     ...state,
+                    ...action.payload,
                     isAuthenticated: true,
                     loading: false,
-                    user: action.payload,
                 }
             },
             loginSuccess: (state, action) => {
                 localStorage.setItem('token', action.payload.token);
-
+                localStorage.setItem('tokenType', action.payload.tokenType);
                 return {
                     ...state,
                     ...action.payload,
@@ -32,6 +32,8 @@ export const authSlice = createSlice(
             },
             registerSuccess: (state, action) => {
                 localStorage.setItem('token', action.payload.token);
+                
+                localStorage.setItem('tokenType', action.payload.tokenType);
 
                 return {
                     ...state,
@@ -42,6 +44,7 @@ export const authSlice = createSlice(
             },
             registerFail: (state) => {
                 localStorage.removeItem('token');
+                localStorage.removeItem('tokenType');
                 return {
                     ...state,
                     isAuthenticated: false,
@@ -52,6 +55,8 @@ export const authSlice = createSlice(
             },
             authError: (state) => {
                 localStorage.removeItem('token');
+                
+                localStorage.removeItem('tokenType');
                 return {
                     ...state,
                     isAuthenticated: false,
@@ -62,6 +67,8 @@ export const authSlice = createSlice(
             },
             loginFail: (state) => {
                 localStorage.removeItem('token');
+                
+                localStorage.removeItem('tokenType');
                 return {
                     ...state,
                     isAuthenticated: false,
@@ -72,6 +79,8 @@ export const authSlice = createSlice(
             },
             logout: (state) => {
                 localStorage.removeItem('token');
+                
+                localStorage.removeItem('tokenType');
                 return {
                     ...state,
                     isAuthenticated: false,
